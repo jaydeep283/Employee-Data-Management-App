@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Home-Employee Data Management App</title>
+{% endblock %}
+
+{% block body %}
+{% if is_added %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Success!</strong> Details of Employee are added successfully to the record.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endif %}
+<h1>Welcome to Employee Data Management App</h1>
+<h5>Choose one of the following operations to perform:</h5>
+<div class="form-div">
+    <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Operation</th>
+        <th scope="col">Select</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Register New Employee</td>
+        <td><a href="{{ url_for('new_employee') }}" class="btn btn-outline-dark">Register</a></td>
+      </tr>
+      <tr>
+        <td>Update Existing Employee Data</td>
+        <td><a href="{{ url_for('update_emp') }}" class="btn btn-outline-dark">Update</a></td>
+      </tr>
+      <tr>
+        <td>Delete Existing Employee Data</td>
+        <td><a href="{{ url_for('del_emp') }}" class="btn btn-outline-dark">Delete</a></td>
+      </tr>
+      <tr>
+        <td>Show All Employee Data</td>
+        <td><a href="{{ url_for('show_all') }}" class="btn btn-outline-dark">Show</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+{% endblock %}

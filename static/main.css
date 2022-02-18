@@ -1,0 +1,18 @@
+h1 {
+    padding: 1%;
+}
+
+h5 {
+    padding-left: 1%;
+    margin-bottom: 1rem;
+}
+
+p {
+    padding-left: 19.2px;
+}
+
+.form-div {
+    width: 50%;
+    margin: auto;
+    padding-top: 1.5em;
+}

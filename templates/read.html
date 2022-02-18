@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>All Details-Employee Data Management App</title>
+{% endblock %}
+
+
+{% block body %}
+    <div class="container-fluid ps-5 pt-2">
+        <h1 class="pb-3">Data of Existing Employee's</h1>
+    </div>
+
+    {% for x in AllEmp %}
+        <h5>Name: {{ x.name }}</h5>
+        <p>Employee ID: {{ x.emp_id }}</p>
+        <p>User Type: {{ x.user_type }}</p>
+        <p>Years of Experience:{{ x.years }}</p>
+        <p>Date of Birth: {{ x.dob }}</p>
+        <p>Date of Joining: {{ x.doj }}</p>
+        <p>Skill Set: {{ x.skill_set }}</p>
+        <p>Projects: {{ x.projects }}</p>
+        <br>
+    {% endfor %}
+{% endblock %}

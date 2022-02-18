@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Update-Employee Data Management App</title>
+{% endblock %}
+
+
+{% block body %}
+    <div class="container-fluid ps-5 pt-2">
+      <h1 class="pb-3">Update Data of Existing Employee</h1>
+    </div>
+    <div class="container-fluid px-5 pt-1">
+      <form>
+        <div class="mb-3">
+          <label for="emp_id" class="form-label">Employee ID</label>
+          <input type="number" class="form-control" id="emp_id" name="emp_id" min="0">
+        </div>
+        <button type="submit" class="btn btn-outline-dark">Update</button>
+      </form>
+    </div>
+{% endblock %}
