@@ -85,6 +85,21 @@ def show_all():
     return render_template('read.html', AllEmp=allEmp)
 
 
+@app.route('/readMenu', methods=['GET', 'POST'])
+def readMenu():
+    firstLoad = True
+    if request.method == 'POST':
+        id = request.form['searchID']
+        name = request.form['searchName']
+        if id:
+            emp_det = Employee.query.get(int(id))
+        elif name:
+            emp_det = Employee.query.filter_by(name=str(name)).first()
+        return render_template('readMenu.html', emp_det=emp_det, load=False)
+    else:
+        return render_template('readMenu.html', load=firstLoad)
+
+
 @app.route('/update')
 def update_emp():
     return render_template('update.html')

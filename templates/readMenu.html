@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Read Menu-Employee Data Management App</title>
+{% endblock %}
+
+
+{% block body %}
+    <div class="container-fluid ps-2 pt-2">
+        <h1 class="pb-3">Employee details</h1>
+    </div>
+    <div class="container-fluid ps-2 pe-2 pt-2">
+        <form action="/readMenu" method="post">
+          <div class="mb-3">
+            <label for="searchID" class="form-label">Search by Employee ID: </label>
+            <input type="text" class="form-control" id="searchID" name="searchID">
+          </div>
+            <div class="mb-3">
+                <label for="searchName" class="form-label">Search by Employee Name: </label>
+                <input type="text" class="form-control" id="searchName" name="searchName">
+            </div>
+            <button type="submit" class="btn btn-outline-dark">Search</button>
+        </form>
+        <a href="{{ url_for('show_all') }}" class="btn btn-outline-dark my-3">Show All</a>
+    </div>
+
+    {% if emp_det %}
+        <div class="container-fluid ps-2 pe-2 pt-2">
+            <h5>Name: {{ emp_det.name }}</h5>
+            <p>Employee ID: {{ emp_det.emp_id }}</p>
+            <p>User Type: {{ emp_det.user_type }}</p>
+            <p>Years of Experience:{{ emp_det.years }}</p>
+            <p>Date of Birth: {{ emp_det.dob }}</p>
+            <p>Date of Joining: {{ emp_det.doj }}</p>
+            <p>Skill Set: {{ emp_det.skill_set }}</p>
+            <p>Projects: {{ emp_det.projects }}</p>
+            <br>
+        </div>
+    {% else %}
+        {% if load %}
+            <div></div>
+        {% else %}
+            <div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+                <strong>Not found!</strong> No record found. Try again with valid ID or Name.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
