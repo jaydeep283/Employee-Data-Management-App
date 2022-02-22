@@ -25,18 +25,20 @@
     </div>
 
     {% if emp_det %}
+        {% for emp in emp_det %}
+                <div class="container-fluid ps-2 pe-2 pt-2">
+                    <h5>Name: {{ emp.name }}</h5>
+                    <p>Employee ID: {{ emp.emp_id }}</p>
+                    <p>User Type: {{ emp.user_type }}</p>
+                    <p>Years of Experience:{{ emp.years }}</p>
+                    <p>Date of Birth: {{ emp.dob }}</p>
+                    <p>Date of Joining: {{ emp.doj }}</p>
+                    <p>Skill Set: {{ emp.skill_set }}</p>
+                    <p>Projects: {{ emp.projects }}</p>
+                    <br>
+                </div>
+        {% endfor %}
 
-        <div class="container-fluid ps-2 pe-2 pt-2">
-            <h5>Name: {{ emp_det.name }}</h5>
-            <p>Employee ID: {{ emp_det.emp_id }}</p>
-            <p>User Type: {{ emp_det.user_type }}</p>
-            <p>Years of Experience:{{ emp_det.years }}</p>
-            <p>Date of Birth: {{ emp_det.dob }}</p>
-            <p>Date of Joining: {{ emp_det.doj }}</p>
-            <p>Skill Set: {{ emp_det.skill_set }}</p>
-            <p>Projects: {{ emp_det.projects }}</p>
-            <br>
-        </div>
 
     {% else %}
         {% if load %}

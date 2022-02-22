@@ -92,8 +92,10 @@ def readMenu():
         name = request.form['searchName']
         if id:
             emp_det = Employee.query.get(int(id))
+            print(emp_det)
         elif name:
-            emp_det = Employee.query.filter_by(name=str(name)).first()
+            emp_det = Employee.query.filter(Employee.name.like(str(name)))
+            print(emp_det)
         return render_template('readMenu.html', emp_det=emp_det, load=False)
     else:
         return render_template('readMenu.html', load=firstLoad)
