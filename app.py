@@ -5,7 +5,6 @@ from datetime import datetime
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///appdata.db'
 db = SQLAlchemy(app)
-# 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
 
 class Employee(db.Model):
     emp_id = db.Column(db.Integer, primary_key=True)
