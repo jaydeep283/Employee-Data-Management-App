@@ -25,6 +25,7 @@
     </div>
 
     {% if emp_det %}
+
         <div class="container-fluid ps-2 pe-2 pt-2">
             <h5>Name: {{ emp_det.name }}</h5>
             <p>Employee ID: {{ emp_det.emp_id }}</p>
@@ -36,6 +37,7 @@
             <p>Projects: {{ emp_det.projects }}</p>
             <br>
         </div>
+
     {% else %}
         {% if load %}
             <div></div>
