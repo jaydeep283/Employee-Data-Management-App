@@ -91,8 +91,11 @@ def readMenu():
         id = request.form['searchID']
         name = request.form['searchName']
         if id:
-            emp_det = Employee.query.get(int(id))
-            print(emp_det)
+            lis = []
+            emp_details =Employee.query.get(int(id))
+            lis.append(emp_details)
+            emp_det = lis[:]
+            print(lis)
         elif name:
             emp_det = Employee.query.filter(Employee.name.like(str(name)))
             print(emp_det)
