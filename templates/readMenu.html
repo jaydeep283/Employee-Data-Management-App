@@ -24,7 +24,7 @@
         <a href="{{ url_for('show_all') }}" class="btn btn-outline-dark my-3">Show All</a>
     </div>
 
-    {% if emp_det %}
+    {% if not None in emp_det %}
         {% for emp in emp_det %}
                 <div class="container-fluid ps-2 pe-2 pt-2">
                     <h5>Name: {{ emp.name }}</h5>
@@ -38,7 +38,6 @@
                     <br>
                 </div>
         {% endfor %}
-
 
     {% else %}
         {% if load %}
