@@ -13,17 +13,39 @@
     {% block head %} {% endblock %}
   </head>
   <body>
-    <ul class="nav nav-pills nav-fill">
-      <li class="nav-item">
-        <a class="nav-link active link-dark" aria-current="page" href="#">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link link-dark" href="#">New User</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link link-dark" href="#">Login</a>
-      </li>
-    </ul>
+    <div>
+      <ul class="nav nav-pills nav-fill">
+        <li class="nav-item">
+          <a class="nav-link active link-dark" aria-current="page" href="{{ url_for('index') }}">Home</a>
+        </li>
+        {% if current_user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link link-dark">Welcome, {{ current_user.username }}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link link-dark" href="{{ url_for('logout_page') }}">Logout</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link link-dark" href="{{ url_for('register_page') }}">New User</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link link-dark" href="{{ url_for('login_page') }}">Login</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
     {% block body %} {% endblock %}
 
