@@ -26,10 +26,14 @@
         <td>Register New Employee</td>
         <td><a href="{{ url_for('new_employee') }}" class="btn btn-outline-dark">Register</a></td>
       </tr>
-      <tr>
-        <td>Update Existing Employee Data</td>
-        <td><a href="{{ url_for('update_emp') }}" class="btn btn-outline-dark">Update</a></td>
-      </tr>
+      {% if current_user.is_authenticated %}
+        <tr>
+          <td>Update Existing Employee Data</td>
+          <td><a href="/update/{{ current_user.details.emp_id }}" class="btn btn-outline-dark">Update</a></td>
+        </tr>
+      {% else %}
+        <div></div>
+      {% endif %}
       <tr>
         <td>Delete Existing Employee Data</td>
         <td><a href="{{ url_for('del_emp') }}" class="btn btn-outline-dark">Delete</a></td>
