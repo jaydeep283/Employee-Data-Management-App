@@ -95,7 +95,9 @@ def readMenu():
 def update_emp():
     if request.method == 'POST':
         id = request.form['emp_id']
-        return redirect(url_for('update_emp_usr', id=id))
+        emp = Employee.query.get(id)
+        # return redirect(url_for('update_emp_usr', id=id))
+        return render_template('update.html', emp=emp)
     else:
         return render_template('updateAdm.html')
 
@@ -104,7 +106,7 @@ def update_emp():
 @login_required
 def update_emp_usr(id):
     emp = Employee.query.get(id)
-    if request.method == 'POST' and current_user.details.user_type == "Employee":
+    if request.method == 'POST':                           #and current_user.details.user_type == "Employee"
         emp.name = request.form['emp_name']
         emp.user_type = request.form['user_type']
         emp.dob = datetime.strptime(request.form['dob'], '%Y-%m-%d')
@@ -115,8 +117,8 @@ def update_emp_usr(id):
         db.session.commit()
         flash(f'Employee details updated successfully!', category='success')
         return redirect(url_for('index'))
-    elif request.method == 'POST' and current_user.details.user_type == "Admin":
-        return redirect(url_for('update_emp'))
+    # elif request.method == 'POST' and current_user.details.user_type == "Admin":
+    #     return redirect(url_for('update_emp', emp=emp))
     else:
         return render_template('update.html', emp=emp)
 

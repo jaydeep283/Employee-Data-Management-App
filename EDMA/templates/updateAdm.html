@@ -10,7 +10,7 @@
         <h1 class="pb-3">Update Employee Details</h1>
     </div>
     <div class="container-fluid px-5 pt-1">
-      <form action="/delete" method="post">
+      <form action="{{ url_for('update_emp') }}" method="post">
         <div class="mb-3">
           <label for="emp_id" class="form-label">Employee ID</label>
           <input type="number" class="form-control" id="emp_id" name="emp_id">

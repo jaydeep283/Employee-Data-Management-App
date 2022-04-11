@@ -35,4 +35,4 @@ instance/
 # virtualenv
 venv/
 ENV/
-edma_env/
+edma_env/__pycache__/
