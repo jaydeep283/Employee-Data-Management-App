@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, url_for, flash
 from datetime import datetime
 from EDMA.models import Employee, User
 from EDMA.forms import RegisterForm, LoginForm
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 
 
 @app.route('/')
@@ -31,6 +31,7 @@ def new_employee():
                            skill_set=skill_set, projects=projects)
         # try:
         db.session.add(new_emp)
+        new_emp.user = current_user
         db.session.commit()
         added = True
         return render_template('index.html', is_added=added)
@@ -41,10 +42,24 @@ def new_employee():
         return render_template('new_empl.html')
 
 
-@app.route('/delete')
+@app.route('/delete', methods=['GET', 'POST'])
 @login_required
 def del_emp():
-    return render_template('delete.html')
+    if request.method == 'POST':
+        id = request.form['emp_id']
+        emp = Employee.query.get(id)
+        usr = emp.user
+        db.session.delete(usr)
+        db.session.delete(emp)
+        db.session.commit()
+        flash(f'Employee details deleted successfully!', category='success')
+        return redirect(url_for('index'))
+    else:
+        if current_user.details.user_type == "Admin":
+            return render_template('delete.html')
+        else:
+            flash(f'You do not have permission for this operation.', category='danger')
+            return redirect(url_for('index'))
 
 
 @app.route('/show_all')
@@ -75,10 +90,35 @@ def readMenu():
         return render_template('readMenu.html', load=firstLoad)
 
 
-@app.route('/update')
+@app.route('/update', methods=['GET', 'POST'])
 @login_required
 def update_emp():
-    return render_template('update.html')
+    if request.method == 'POST':
+        id = request.form['emp_id']
+        return redirect(url_for('update_emp_usr', id=id))
+    else:
+        return render_template('updateAdm.html')
+
+
+@app.route('/update/<int:id>', methods=['GET', 'POST'])
+@login_required
+def update_emp_usr(id):
+    emp = Employee.query.get(id)
+    if request.method == 'POST' and current_user.details.user_type == "Employee":
+        emp.name = request.form['emp_name']
+        emp.user_type = request.form['user_type']
+        emp.dob = datetime.strptime(request.form['dob'], '%Y-%m-%d')
+        emp.doj = datetime.strptime(request.form['doj'], '%Y-%m-%d')
+        emp.years = request.form['years']
+        emp.skill_set = request.form['skill_set']
+        emp.projects = request.form['projects']
+        db.session.commit()
+        flash(f'Employee details updated successfully!', category='success')
+        return redirect(url_for('index'))
+    elif request.method == 'POST' and current_user.details.user_type == "Admin":
+        return redirect(url_for('update_emp'))
+    else:
+        return render_template('update.html', emp=emp)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -110,7 +150,7 @@ def login_page():
             flash(f'Success! You are logged in as: {attempted_user.username}', category='success')
             return redirect(url_for('index'))
         else:
-            flash(f"Username and password doesn't match! Please try again.", category='danger')
+            flash(f"Username and password don't match! Please try again.", category='danger')
     return render_template('login.html', form=form)
 
 

@@ -21,7 +21,10 @@
             </div>
             <button type="submit" class="btn btn-outline-dark">Search</button>
         </form>
-        <a href="{{ url_for('show_all') }}" class="btn btn-outline-dark my-3">Show All</a>
+        {% if current_user.details.user_type == "Admin" %}
+            <a href="{{ url_for('show_all') }}" class="btn btn-outline-dark my-3">Show All</a>
+        {% endif %}
+
     </div>
 
     {% if not None in emp_det %}
