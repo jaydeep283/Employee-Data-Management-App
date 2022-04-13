@@ -49,8 +49,8 @@ class Employee(db.Model):
     dob = db.Column(db.DateTime, nullable=False)
     doj = db.Column(db.DateTime, nullable=False)
     years = db.Column(db.Integer, nullable=False)
-    skill_set = db.Column(db.String(125), nullable=False)
-    projects = db.Column(db.String(125), nullable=False)
+    # skill_set = db.Column(db.String(125), nullable=False)
+    # projects = db.Column(db.String(125), nullable=False)
     user = db.relationship("User", backref='details', lazy='select', uselist=False)
 
     def __repr__(self):

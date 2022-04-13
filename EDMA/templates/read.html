@@ -17,8 +17,14 @@
         <p>Years of Experience:{{ x.years }}</p>
         <p>Date of Birth: {{ x.dob }}</p>
         <p>Date of Joining: {{ x.doj }}</p>
-        <p>Skill Set: {{ x.skill_set }}</p>
-        <p>Projects: {{ x.projects }}</p>
+        <p class="skill_para">Skill Set: </p>
+        {% for skill in x.user.skills %}
+            <span class="mx-3">{{ skill.name }}</span>
+        {% endfor %}
+        <p class="mt-2 proj_para">Projects: </p>
+        {% for proj in x.user.projects %}
+            <span class="mx-3">{{ proj.name }}</span>
+        {% endfor %}
         <br>
     {% endfor %}
 {% endblock %}

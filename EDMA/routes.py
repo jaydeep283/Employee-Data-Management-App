@@ -1,7 +1,7 @@
 from EDMA import app, db
 from flask import render_template, request, redirect, url_for, flash
 from datetime import datetime
-from EDMA.models import Employee, User
+from EDMA.models import Employee, User, Skill, Project
 from EDMA.forms import RegisterForm, LoginForm
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -19,19 +19,42 @@ def new_employee():
         name = request.form['emp_name']
         emp_id = request.form['emp_id']
         user_type = request.form['user_type']
-        # dob = request.form['dob']
         dob = datetime.strptime(request.form['dob'], '%Y-%m-%d')
-        # doj = request.form['doj']
         doj = datetime.strptime(request.form['doj'], '%Y-%m-%d')
         years = request.form['years']
-        skill_set = request.form['skill_set']
+        skills = request.form.getlist('skills')
         projects = request.form['projects']
+        proj_list = projects.split(',')
 
-        new_emp = Employee(emp_id=emp_id, name=name, user_type=user_type, dob=dob, doj=doj, years=years,
-                           skill_set=skill_set, projects=projects)
-        # try:
+        new_emp = Employee(emp_id=emp_id, name=name, user_type=user_type, dob=dob, doj=doj, years=years)
         db.session.add(new_emp)
         new_emp.user = current_user
+
+        exh_proj = []
+        for p in Project.query.all():
+            exh_proj.append(p.name)
+        for proj in proj_list:
+            pstrp = proj.strip()
+            if pstrp in exh_proj:
+                p = Project.query.filter_by(name=pstrp).first()
+                current_user.projects.append(p)
+            else:
+                p = Project(name=pstrp)
+                db.session.add(p)
+                current_user.projects.append(p)
+
+        exh_skill = []
+        for s in Skill.query.all():
+            exh_skill.append(s.name)
+        for skill in skills:
+            if skill in exh_skill:
+                s = Skill.query.filter_by(name=skill).first()
+                current_user.skills.append(s)
+            else:
+                s = Skill(name=skill)
+                db.session.add(s)
+                current_user.skills.append(s)
+
         db.session.commit()
         added = True
         return render_template('index.html', is_added=added)

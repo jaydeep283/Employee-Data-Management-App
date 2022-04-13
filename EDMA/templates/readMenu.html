@@ -30,14 +30,20 @@
     {% if not None in emp_det %}
         {% for emp in emp_det %}
                 <div class="container-fluid ps-2 pe-2 pt-2">
-                    <h5>Name: {{ emp.name }}</h5>
-                    <p>Employee ID: {{ emp.emp_id }}</p>
-                    <p>User Type: {{ emp.user_type }}</p>
-                    <p>Years of Experience:{{ emp.years }}</p>
-                    <p>Date of Birth: {{ emp.dob }}</p>
-                    <p>Date of Joining: {{ emp.doj }}</p>
-                    <p>Skill Set: {{ emp.skill_set }}</p>
-                    <p>Projects: {{ emp.projects }}</p>
+                    <p><span class="fw-bold">Name:</span> {{ emp.name }}</p>
+                    <p><span class="fw-bold">Employee ID:</span> {{ emp.emp_id }}</p>
+                    <p><span class="fw-bold">User Type:</span> {{ emp.user_type }}</p>
+                    <p><span class="fw-bold">Years of Experience:</span> {{ emp.years }}</p>
+                    <p><span class="fw-bold">Date of Birth:</span> {{ emp.dob }}</p>
+                    <p><span class="fw-bold">Date of Joining:</span> {{ emp.doj }}</p>
+                    <p class="skill_para fw-bold">Skill Set: </p>
+                    {% for skill in emp.user.skills %}
+                        <span class="mx-3">{{ skill.name }}</span>
+                    {% endfor %}
+                    <p class="mt-2 proj_para fw-bold">Projects: </p>
+                    {% for proj in emp.user.projects %}
+                        <span class="mx-3">{{ proj.name }}</span>
+                    {% endfor %}
                     <br>
                 </div>
         {% endfor %}
