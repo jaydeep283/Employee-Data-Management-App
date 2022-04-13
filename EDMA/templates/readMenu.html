@@ -19,12 +19,19 @@
                 <label for="searchName" class="form-label">Search by Employee Name: </label>
                 <input type="text" class="form-control" id="searchName" name="searchName">
             </div>
+            <div class="mb-3">
+                <label for="searchProject" class="form-label">Search by Project: </label>
+                <input type="text" class="form-control" id="searchProject" name="searchProject">
+            </div>
+            <div class="mb-3">
+                <label for="searchSkill" class="form-label">Search by Skill: </label>
+                <input type="text" class="form-control" id="searchSkill" name="searchSkill">
+            </div>
             <button type="submit" class="btn btn-outline-dark">Search</button>
         </form>
         {% if current_user.details.user_type == "Admin" %}
             <a href="{{ url_for('show_all') }}" class="btn btn-outline-dark my-3">Show All</a>
         {% endif %}
-
     </div>
 
     {% if not None in emp_det %}
@@ -44,6 +51,7 @@
                     {% for proj in emp.user.projects %}
                         <span class="mx-3">{{ proj.name }}</span>
                     {% endfor %}
+                    <hr>
                     <br>
                 </div>
         {% endfor %}

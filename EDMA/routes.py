@@ -99,6 +99,8 @@ def readMenu():
     if request.method == 'POST':
         id = request.form['searchID']
         name = request.form['searchName']
+        proj = request.form['searchProject']
+        skill = request.form['searchSkill']
         if id:
             lis = []
             emp_details = Employee.query.get(int(id))
@@ -108,6 +110,16 @@ def readMenu():
         elif name:
             emp_det = Employee.query.filter(Employee.name.like(str(name)))
             print(emp_det)
+        elif proj:
+            emp_det =[]
+            p = Project.query.filter_by(name=proj).first()
+            for usr in p.users:
+                emp_det.append(usr.details)
+        elif skill:
+            emp_det =[]
+            s = Skill.query.filter_by(name=skill).first()
+            for usr in s.users:
+                emp_det.append(usr.details)
         return render_template('readMenu.html', emp_det=emp_det, load=False)
     else:
         return render_template('readMenu.html', load=firstLoad)

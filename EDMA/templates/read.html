@@ -11,20 +11,23 @@
     </div>
 
     {% for x in AllEmp %}
-        <h5>Name: {{ x.name }}</h5>
-        <p>Employee ID: {{ x.emp_id }}</p>
-        <p>User Type: {{ x.user_type }}</p>
-        <p>Years of Experience:{{ x.years }}</p>
-        <p>Date of Birth: {{ x.dob }}</p>
-        <p>Date of Joining: {{ x.doj }}</p>
-        <p class="skill_para">Skill Set: </p>
-        {% for skill in x.user.skills %}
-            <span class="mx-3">{{ skill.name }}</span>
-        {% endfor %}
-        <p class="mt-2 proj_para">Projects: </p>
-        {% for proj in x.user.projects %}
-            <span class="mx-3">{{ proj.name }}</span>
-        {% endfor %}
-        <br>
+        <div class="container-fluid ps-2 pe-2 pt-2">
+            <p><span class="fw-bold">Name:</span> {{ x.name }}</p>
+            <p><span class="fw-bold">Employee ID:</span> {{ x.emp_id }}</p>
+            <p><span class="fw-bold">User Type:</span> {{ x.user_type }}</p>
+            <p><span class="fw-bold">Years of Experience:</span> {{ x.years }}</p>
+            <p><span class="fw-bold">Date of Birth:</span> {{ x.dob }}</p>
+            <p><span class="fw-bold">Date of Joining:</span> {{ x.doj }}</p>
+            <p class="skill_para fw-bold">Skill Set: </p>
+            {% for skill in x.user.skills %}
+                <span class="mx-3">{{ skill.name }}</span>
+            {% endfor %}
+            <p class="mt-2 proj_para fw-bold">Projects: </p>
+            {% for proj in x.user.projects %}
+                <span class="mx-3">{{ proj.name }}</span>
+            {% endfor %}
+            <hr>
+            <br>
+        </div>
     {% endfor %}
 {% endblock %}
