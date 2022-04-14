@@ -8,9 +8,12 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-user_skill = db.Table('user_skill',
-                      db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-                      db.Column('skill_id', db.Integer, db.ForeignKey('skill.id')))
+class Userskill(db.Model):
+    __tablename__ = 'userskill'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    skill_id = db.Column(db.Integer, db.ForeignKey('skill.id'))
+    rating = db.Column(db.Integer)
 
 
 user_project = db.Table('user_project',
@@ -24,7 +27,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(50), nullable=False, unique=True)
     password_hash = db.Column(db.String(60), nullable=False)
     emp_id = db.Column(db.Integer, db.ForeignKey('employee.emp_id'))
-    skills = db.relationship('Skill', secondary=user_skill, backref='users')
+    skills = db.relationship('Skill', secondary='userskill', backref='users')
     projects = db.relationship('Project', secondary=user_project, backref='users')
 
     def __repr__(self):
