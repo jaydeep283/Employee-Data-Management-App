@@ -1,7 +1,7 @@
 from EDMA import app, db
 from flask import render_template, request, redirect, url_for, flash
 from datetime import datetime
-from EDMA.models import Employee, User, Skill, Project
+from EDMA.models import Employee, User, Skill, Project, Userskill
 from EDMA.forms import RegisterForm, LoginForm
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -22,7 +22,7 @@ def new_employee():
         dob = datetime.strptime(request.form['dob'], '%Y-%m-%d')
         doj = datetime.strptime(request.form['doj'], '%Y-%m-%d')
         years = request.form['years']
-        skills = request.form.getlist('skills')
+        # skills = request.form.getlist('skills')
         projects = request.form['projects']
         proj_list = projects.split(',')
 
@@ -43,17 +43,17 @@ def new_employee():
                 db.session.add(p)
                 current_user.projects.append(p)
 
-        exh_skill = []
-        for s in Skill.query.all():
-            exh_skill.append(s.name)
-        for skill in skills:
-            if skill in exh_skill:
-                s = Skill.query.filter_by(name=skill).first()
-                current_user.skills.append(s)
-            else:
-                s = Skill(name=skill)
-                db.session.add(s)
-                current_user.skills.append(s)
+        # exh_skill = []
+        # for s in Skill.query.all():
+        #     exh_skill.append(s.name)
+        # for skill in skills:
+        #     if skill in exh_skill:
+        #         s = Skill.query.filter_by(name=skill).first()
+        #         current_user.skills.append(s)
+        #     else:
+        #         s = Skill(name=skill)
+        #         db.session.add(s)
+        #         current_user.skills.append(s)
 
         db.session.commit()
         added = True
@@ -189,6 +189,57 @@ def login_page():
         else:
             flash(f"Username and password don't match! Please try again.", category='danger')
     return render_template('login.html', form=form)
+
+
+@app.route('/skills/<int:id>', methods=['GET', 'POST'])
+def skills(id):
+    emp  = Employee.query.get(id)
+    if request.method == 'POST':
+        skill = request.form['skill']
+        level = request.form['level']
+        emp_exh_skills = [skill.name for skill in emp.user.skills]
+        exh_skill = [s.name for s in Skill.query.all()]
+
+        if skill in exh_skill:
+            if skill in emp_exh_skills:
+                uid = emp.user.id
+                sid = Skill.query.filter_by(name=skill).first().id
+                rating = Userskill.query.filter_by(user_id=uid, skill_id=sid).first().rating
+                if level == rating:
+                    flash("Skill already exists with same level!", category='danger')
+                    return render_template('skill.html', id=id)
+                else:
+                    Userskill.query.filter_by(user_id=uid, skill_id=sid).first().rating = level
+                    db.session.commit()
+                    flash("Skill level updated!", category='success')
+                    return render_template('skill.html', id=id)
+            else:
+                s = Skill.query.filter_by(name=skill).first()
+                current_user.skills.append(s)
+                db.session.commit()
+                uid = emp.user.id
+                sid = s.id
+                Userskill.query.filter_by(user_id=uid, skill_id=sid).first().rating = level
+                db.session.commit()
+                flash("Skill added successfully!", category='success')
+                return render_template('skill.html', id=id)
+        else:
+            s = Skill(name=skill)
+            db.session.add(s)
+            print(emp.user.username)
+            emp.user.skills.append(s)
+            db.session.commit()
+            uid = emp.user.id
+            print(uid)
+            sid = s.id
+            print(sid)
+            print(Userskill.query.filter_by(user_id=uid, skill_id=sid).first().id)
+            Userskill.query.filter_by(user_id=uid, skill_id=sid).first().rating = level
+            db.session.commit()
+            flash("Skill added successfully!", category='success')
+            return render_template('skill.html', id=id)
+    else:
+        return render_template('skill.html', id=id)
 
 
 @app.route('/logout')

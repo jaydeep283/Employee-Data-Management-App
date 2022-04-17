@@ -33,10 +33,18 @@
               <a href="{{ url_for('update_emp') }}" class="btn btn-outline-dark">Update Other</a>
           </td>
         </tr>
+        <tr>
+          <td>Add Skills</td>
+          <td><a href="/skills/{{ current_user.details.emp_id }}" class="btn btn-outline-dark">Add Skill</a></td>
+        </tr>
       {% elif current_user.is_authenticated %}
         <tr>
           <td>Update Existing Employee Data</td>
           <td><a href="/update/{{ current_user.details.emp_id }}" class="btn btn-outline-dark">Update</a></td>
+        </tr>
+        <tr>
+          <td>Add Skills</td>
+          <td><a href="/skills/{{ current_user.details.emp_id }}" class="btn btn-outline-dark">Add Skill</a></td>
         </tr>
       {% endif %}
       <tr>

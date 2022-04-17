@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Add Skill-Employee Data Management App</title>
+{% endblock %}
+
+
+{% block body %}
+    <div class="container-fluid ps-5 pt-2">
+        <h1 class="pb-3">Add Skill</h1>
+    </div>
+    <div class="container-fluid px-5 pt-1">
+      <form action="{{ url_for('skills', id=id) }}" method="post">
+        <div class="mb-3">
+              <label for="skill" class="form-label">Skill</label>
+              <input type="text" class="form-control" id="skill" name="skill">
+
+            <label class="col-sm-2 col-form-label">Level</label>
+            <div class="custom-control-radio col-sm-4">
+                <input type="radio" id="beginner" class="custom-control-input" name="level" value="1" required>
+                <label for="beginner" class="custom-control-label">Beginner</label>
+                <br>
+                <input type="radio" id="intermediate" class="custom-control-input" name="level" value="2">
+                <label for="intermediate" class="custom-control-label">Intermediate</label>
+                <br>
+                <input type="radio" id="expert" class="custom-control-input" name="level" value="3">
+                <label for="expert" class="custom-control-label">Expert</label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-outline-dark">Add</button>
+      </form>
+    </div>
+{% endblock %}
