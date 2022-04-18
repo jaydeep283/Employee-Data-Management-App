@@ -76,6 +76,12 @@ def del_emp():
             return render_template('delete.html')
         else:
             usr = emp.user
+            tdel = Team.query.filter_by(emp_id=usr.details.emp_id).all()
+            if len(tdel) == 0:
+                pass
+            else:
+                for t in tdel:
+                    db.session.delete(t)
             db.session.delete(usr)
             db.session.delete(emp)
             db.session.commit()
