@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>View Team-Employee Data Management App</title>
+{% endblock %}
+
+
+{% block body %}
+<h1>Team Members Details</h1>
+<div class="form-div">
+    <h3>TEAM - {{ team.name }}</h3>
+    <table class="table">
+    <thead>
+      <tr>
+          <th scope="col">Employee ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Project Name</th>
+          <th scope="'col">Designation</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for mt in memb_lis %}
+           <tr>
+               <td>{{ mt. }}</td>
+               <td></td>
+               <td></td>
+               <td></td>
+           </tr>
+        {% endfor %}
+
+{% endblock %}

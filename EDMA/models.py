@@ -55,10 +55,10 @@ class User(db.Model, UserMixin):
 
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.Integer, db.ForeignKey('employee.emp_id'))
     name = db.Column(db.String(25), nullable=False)
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    proj = db.Column(db.String(25),  nullable=False)
     designation = db.Column(db.String(25), nullable=False)
+    emp_id = db.Column(db.Integer, db.ForeignKey('employee.emp_id'))
 
 
 class Employee(db.Model):
@@ -69,6 +69,7 @@ class Employee(db.Model):
     doj = db.Column(db.DateTime, nullable=False)
     years = db.Column(db.Integer, nullable=False)
     user = db.relationship("User", backref='details', lazy='select', uselist=False)
+    team = db.relationship("Team", backref='team')
 
     def __repr__(self):
         return "Employee: " + str(self.emp_id)

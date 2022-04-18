@@ -260,7 +260,7 @@ def addTeam():
         name = request.form['teamName']
         proj = request.form['projectName']
         designation = request.form['designation']
-        t = Team(name=name, designation=designation)
+        t = Team(name=name, designation=designation, proj=proj)
         db.session.add(t)
         exh_proj = []
         for p in Project.query.all():
@@ -274,7 +274,7 @@ def addTeam():
             db.session.add(p)
             current_user.projects.append(p)
         t.project_id = Project.query.filter_by(name=proj).first().id
-        t.emp_id = emp_id
+        t.members.append(Employee.query.get(emp_id))
         db.session.commit()
         flash("Team details added successfully!", category='success')
         return render_template('addTeam.html')
@@ -284,7 +284,16 @@ def addTeam():
 
 @app.route('/teams/<int:emp_id>')
 def viewTeam(emp_id):
-    t = Team.query.filter_by(emp_id=emp_id)
+    emp = Employee.query.get(emp_id)
+    team = emp.team
+    memb_lis = []
+    tlis = []
+    for member in team.members:
+        memb_lis.append(member)
+    for m in memb_lis:
+        tlis.append(Team.query.get(m.team_id))
+    return render_template('viewTeam.html', memb_lis=tlis, elis=memb_lis, team=team)
+
 
 @app.route('/logout')
 def logout_page():
