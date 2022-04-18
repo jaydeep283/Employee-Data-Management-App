@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Add Team-Employee Data Management App</title>
+{% endblock %}
+
+
+{% block body %}
+    <div class="container-fluid ps-5 pt-2">
+        <h1 class="pb-3">Add Team/Member</h1>
+    </div>
+    <div class="container-fluid px-5 pt-1">
+      <form action="{{ url_for('addTeam') }}" method="post">
+        <div class="mb-3">
+              <label for="emp_id" class="form-label">Employee ID</label>
+              <input type="number" class="form-control" id="emp_id" name="emp_id">
+              <label for="teamName" class="form-label">Team Name</label>
+              <input type="text" class="form-control" id="teamName" name="teamName">
+              <label for="projectName" class="form-label">Project Name</label>
+              <input type="text" class="form-control" id="projectName" name="projectName">
+              <label for="designation" class="form-label">Designation</label>
+              <input type="text" class="form-control" id="designation" name="designation">
+        </div>
+        <button type="submit" class="btn btn-outline-dark">Add</button>
+      </form>
+    </div>
+{% endblock %}

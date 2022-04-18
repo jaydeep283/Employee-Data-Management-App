@@ -37,6 +37,10 @@
           <td>Add Skills</td>
           <td><a href="/skills/{{ current_user.details.emp_id }}" class="btn btn-outline-dark">Add Skill</a></td>
         </tr>
+        <tr>
+          <td>Add Team/Team Member</td>
+          <td><a href="/teams" class="btn btn-outline-dark">Add Team/Member</a></td>
+        </tr>
       {% elif current_user.is_authenticated %}
         <tr>
           <td>Update Existing Employee Data</td>
@@ -45,6 +49,10 @@
         <tr>
           <td>Add Skills</td>
           <td><a href="/skills/{{ current_user.details.emp_id }}" class="btn btn-outline-dark">Add Skill</a></td>
+        </tr>
+        <tr>
+          <td>Show Team Members</td>
+          <td><a href="/teams/{{ current_user.details.emp_id }}" class="btn btn-outline-dark">View Team</a></td>
         </tr>
       {% endif %}
       <tr>

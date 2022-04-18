@@ -16,9 +16,17 @@ class Userskill(db.Model):
     rating = db.Column(db.Integer)
 
 
-user_project = db.Table('user_project',
-                      db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-                      db.Column('project_id', db.Integer, db.ForeignKey('project.id')))
+class Userproject(db.Model):
+    __tablename__ = 'userproject'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+
+
+# user_project = db.Table('user_project',
+#                       db.Column('id', db.Integer, primary_key=True),
+#                       db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+#                       db.Column('project_id', db.Integer, db.ForeignKey('project.id')))
 
 
 class User(db.Model, UserMixin):
@@ -28,7 +36,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(60), nullable=False)
     emp_id = db.Column(db.Integer, db.ForeignKey('employee.emp_id'))
     skills = db.relationship('Skill', secondary='userskill', backref='users')
-    projects = db.relationship('Project', secondary=user_project, backref='users')
+    projects = db.relationship('Project', secondary='userproject', backref='users')
 
     def __repr__(self):
         return "<User: " + self.username + ">"
@@ -43,6 +51,14 @@ class User(db.Model, UserMixin):
 
     def check_password_correction(self, attempted_password):
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
+
+
+class Team(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    emp_id = db.Column(db.Integer, db.ForeignKey('employee.emp_id'))
+    name = db.Column(db.String(25), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    designation = db.Column(db.String(25), nullable=False)
 
 
 class Employee(db.Model):

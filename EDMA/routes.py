@@ -1,7 +1,7 @@
 from EDMA import app, db
 from flask import render_template, request, redirect, url_for, flash
 from datetime import datetime
-from EDMA.models import Employee, User, Skill, Project, Userskill
+from EDMA.models import Employee, User, Skill, Project, Team, Userskill, Userproject
 from EDMA.forms import RegisterForm, LoginForm
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -23,25 +23,25 @@ def new_employee():
         doj = datetime.strptime(request.form['doj'], '%Y-%m-%d')
         years = request.form['years']
         # skills = request.form.getlist('skills')
-        projects = request.form['projects']
-        proj_list = projects.split(',')
+        # projects = request.form['projects']
+        #proj_list = projects.split(',')
 
         new_emp = Employee(emp_id=emp_id, name=name, user_type=user_type, dob=dob, doj=doj, years=years)
         db.session.add(new_emp)
         new_emp.user = current_user
 
-        exh_proj = []
-        for p in Project.query.all():
-            exh_proj.append(p.name)
-        for proj in proj_list:
-            pstrp = proj.strip()
-            if pstrp in exh_proj:
-                p = Project.query.filter_by(name=pstrp).first()
-                current_user.projects.append(p)
-            else:
-                p = Project(name=pstrp)
-                db.session.add(p)
-                current_user.projects.append(p)
+        # exh_proj = []
+        # for p in Project.query.all():
+        #     exh_proj.append(p.name)
+        # for proj in proj_list:
+        #     pstrp = proj.strip()
+        #     if pstrp in exh_proj:
+        #         p = Project.query.filter_by(name=pstrp).first()
+        #         current_user.projects.append(p)
+        #     else:
+        #         p = Project(name=pstrp)
+        #         db.session.add(p)
+        #         current_user.projects.append(p)
 
         # exh_skill = []
         # for s in Skill.query.all():
@@ -101,6 +101,9 @@ def readMenu():
         name = request.form['searchName']
         proj = request.form['searchProject']
         skill = request.form['searchSkill']
+        level = request.form['seSkillLevel']
+        lCheck = request.form.get('skillCheck')
+
         if id:
             lis = []
             emp_details = Employee.query.get(int(id))
@@ -115,8 +118,16 @@ def readMenu():
             p = Project.query.filter_by(name=proj).first()
             for usr in p.users:
                 emp_det.append(usr.details)
-        elif skill:
+        elif skill and lCheck == '1':
             emp_det =[]
+            s = Skill.query.filter_by(name=skill).first()
+            sid = s.id
+            for usr in s.users:
+                uid = usr.id
+                if Userskill.query.filter_by(user_id=uid, skill_id=sid).first().rating >= int(level):
+                    emp_det.append(usr.details)
+        elif skill:
+            emp_det = []
             s = Skill.query.filter_by(name=skill).first()
             for usr in s.users:
                 emp_det.append(usr.details)
@@ -241,6 +252,39 @@ def skills(id):
     else:
         return render_template('skill.html', id=id)
 
+
+@app.route('/teams', methods=['GET', 'POST'])
+def addTeam():
+    if request.method == 'POST':
+        emp_id = request.form['emp_id']
+        name = request.form['teamName']
+        proj = request.form['projectName']
+        designation = request.form['designation']
+        t = Team(name=name, designation=designation)
+        db.session.add(t)
+        exh_proj = []
+        for p in Project.query.all():
+            exh_proj.append(p.name)
+
+        if proj in exh_proj:
+            p = Project.query.filter_by(name=proj).first()
+            current_user.projects.append(p)
+        else:
+            p = Project(name=proj)
+            db.session.add(p)
+            current_user.projects.append(p)
+        t.project_id = Project.query.filter_by(name=proj).first().id
+        t.emp_id = emp_id
+        db.session.commit()
+        flash("Team details added successfully!", category='success')
+        return render_template('addTeam.html')
+    else:
+        return render_template('addTeam.html')
+
+
+@app.route('/teams/<int:emp_id>')
+def viewTeam(emp_id):
+    t = Team.query.filter_by(emp_id=emp_id)
 
 @app.route('/logout')
 def logout_page():
