@@ -24,7 +24,7 @@
     <tbody>
       <tr>
         <td>Register New Employee</td>
-        <td><a href="{{ url_for('new_employee') }}" class="btn btn-outline-dark">Register</a></td>
+        <td><a href="{{ url_for('new_employee') }}" class="btn btn-outline-dark">Register</a></td
       </tr>
       {% if current_user.is_authenticated and current_user.details.user_type=="Admin" %}
         <tr>
@@ -40,6 +40,10 @@
         <tr>
           <td>Add Team/Team Member</td>
           <td><a href="/teams" class="btn btn-outline-dark">Add Team/Member</a></td>
+        </tr>
+        <tr>
+          <td>Show Team Members</td>
+          <td><a href="/teams/{{ current_user.details.emp_id }}" class="btn btn-outline-dark">View Team</a></td>
         </tr>
       {% elif current_user.is_authenticated %}
         <tr>

@@ -8,7 +8,6 @@
 {% block body %}
 <h1>Team Members Details</h1>
 <div class="form-div">
-    <h3>TEAM - {{ team.name }}</h3>
     <table class="table">
     <thead>
       <tr>
@@ -19,13 +18,15 @@
       </tr>
     </thead>
     <tbody>
-        {% for mt in memb_lis %}
-           <tr>
-               <td>{{ mt. }}</td>
-               <td></td>
-               <td></td>
-               <td></td>
-           </tr>
+        {% for mt in tdet %}
+            {% if mt.emp_id != emp_id %}
+        `       <tr>
+                   <td>{{ mt.emp_id }}</td>
+                   <td>{{ mt.name }}</td>
+                   <td>{{ mt.proj }}</td>
+                   <td>{{ mt.designation }}</td>
+               </tr>
+            {% endif %}
         {% endfor %}
 
 {% endblock %}

@@ -71,12 +71,16 @@ def del_emp():
     if request.method == 'POST':
         id = request.form['emp_id']
         emp = Employee.query.get(id)
-        usr = emp.user
-        db.session.delete(usr)
-        db.session.delete(emp)
-        db.session.commit()
-        flash(f'Employee details deleted successfully!', category='success')
-        return redirect(url_for('index'))
+        if emp is None:
+            flash("Employee doesn't exist with Employee ID:{}!".format(id), category='danger')
+            return render_template('delete.html')
+        else:
+            usr = emp.user
+            db.session.delete(usr)
+            db.session.delete(emp)
+            db.session.commit()
+            flash(f'Employee details deleted successfully!', category='success')
+            return redirect(url_for('index'))
     else:
         if current_user.details.user_type == "Admin":
             return render_template('delete.html')
@@ -111,26 +115,43 @@ def readMenu():
             emp_det = lis[:]
             print(lis)
         elif name:
-            emp_det = Employee.query.filter(Employee.name.like(str(name)))
-            print(emp_det)
+            emp_det = Employee.query.filter(Employee.name.like(str(name))).all()
+            if len(emp_det) == 0:
+                flash("Details not found related to {}! Try with valid name.".format(name), category='danger')
+                return render_template('readMenu.html', load=firstLoad)
         elif proj:
             emp_det =[]
             p = Project.query.filter_by(name=proj).first()
-            for usr in p.users:
-                emp_det.append(usr.details)
+            if p is None:
+                flash("Details not found related to {}!".format(proj), category='danger')
+                return render_template('readMenu.html', load=firstLoad)
+            else:
+                for usr in p.users:
+                    emp_det.append(usr.details)
         elif skill and lCheck == '1':
             emp_det =[]
             s = Skill.query.filter_by(name=skill).first()
-            sid = s.id
-            for usr in s.users:
-                uid = usr.id
-                if Userskill.query.filter_by(user_id=uid, skill_id=sid).first().rating >= int(level):
-                    emp_det.append(usr.details)
+            if s is None or len(s.users) == 0:
+                flash("Details not found related to Skill {}! Try again.".format(skill), category='danger')
+                return render_template('readMenu.html', load=firstLoad)
+            else:
+                sid = s.id
+                for usr in s.users:
+                    uid = usr.id
+                    if Userskill.query.filter_by(user_id=uid, skill_id=sid).first().rating >= int(level):
+                        emp_det.append(usr.details)
+                if len(emp_det) == 0:
+                    flash("Details not found with requested Skill level or higher", category='danger')
+                    return render_template('readMenu.html', load=firstLoad)
         elif skill:
             emp_det = []
             s = Skill.query.filter_by(name=skill).first()
-            for usr in s.users:
-                emp_det.append(usr.details)
+            if s is None or len(s.users) == 0:
+                flash("Details not found related to Skill {}! Try again.".format(skill), category='danger')
+                return render_template('readMenu.html', load=firstLoad)
+            else:
+                for usr in s.users:
+                    emp_det.append(usr.details)
         return render_template('readMenu.html', emp_det=emp_det, load=False)
     else:
         return render_template('readMenu.html', load=firstLoad)
@@ -204,7 +225,7 @@ def login_page():
 
 @app.route('/skills/<int:id>', methods=['GET', 'POST'])
 def skills(id):
-    emp  = Employee.query.get(id)
+    emp = Employee.query.get(id)
     if request.method == 'POST':
         skill = request.form['skill']
         level = request.form['level']
@@ -260,6 +281,7 @@ def addTeam():
         name = request.form['teamName']
         proj = request.form['projectName']
         designation = request.form['designation']
+        emp = Employee.query.get(emp_id)
         t = Team(name=name, designation=designation, proj=proj)
         db.session.add(t)
         exh_proj = []
@@ -268,13 +290,14 @@ def addTeam():
 
         if proj in exh_proj:
             p = Project.query.filter_by(name=proj).first()
-            current_user.projects.append(p)
+            emp.user.projects.append(p)
+            db.session.commit()
         else:
             p = Project(name=proj)
             db.session.add(p)
-            current_user.projects.append(p)
-        t.project_id = Project.query.filter_by(name=proj).first().id
-        t.members.append(Employee.query.get(emp_id))
+            emp.user.projects.append(p)
+            db.session.commit()
+        emp.team.append(t)
         db.session.commit()
         flash("Team details added successfully!", category='success')
         return render_template('addTeam.html')
@@ -284,15 +307,19 @@ def addTeam():
 
 @app.route('/teams/<int:emp_id>')
 def viewTeam(emp_id):
-    emp = Employee.query.get(emp_id)
-    team = emp.team
-    memb_lis = []
-    tlis = []
-    for member in team.members:
-        memb_lis.append(member)
-    for m in memb_lis:
-        tlis.append(Team.query.get(m.team_id))
-    return render_template('viewTeam.html', memb_lis=tlis, elis=memb_lis, team=team)
+    tlis = Team.query.filter_by(emp_id=emp_id).all()
+    tnames = []
+    for t in tlis:
+        if not t.name in tnames:
+            tnames.append(t.name)
+    lis = []
+    for tn in tnames:
+        lis.extend(Team.query.filter_by(name=tn).all())
+    if len(lis) == 0:
+        flash("You don't have any Team Members", category='info')
+        return redirect(url_for('index'))
+    else:
+        return render_template('viewTeam.html', tdet=lis, emp_id=emp_id)
 
 
 @app.route('/logout')
