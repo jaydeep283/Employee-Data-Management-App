@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Set Active Project-Employee Data Management App</title>
+{% endblock %}
+
+
+{% block body %}
+    <div class="container-fluid ps-5 pt-2">
+        <h1 class="pb-3">Set Active Project</h1>
+    </div>
+    <div class="container-fluid px-5 pt-1">
+      <form action="{{ url_for('activeProject') }}" method="post">
+        <div class="mb-3">
+              <label for="activeProj" class="form-label">Select Active Project</label>
+              <select class="form-select" id="activeProj" name="activeProj">
+                {% for proj in projects %}
+                  <option value="{{ proj.name }}">{{ proj.name }}</option>
+                {% endfor %}
+              </select>
+        </div>
+        <button type="submit" class="btn btn-outline-dark">Set</button>
+      </form>
+    </div>
+{% endblock %}

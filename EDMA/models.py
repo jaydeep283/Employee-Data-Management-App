@@ -68,6 +68,7 @@ class Employee(db.Model):
     dob = db.Column(db.DateTime, nullable=False)
     doj = db.Column(db.DateTime, nullable=False)
     years = db.Column(db.Integer, nullable=False)
+    activeProj = db.Column(db.String(25))
     user = db.relationship("User", backref='details', lazy='select', uselist=False)
     team = db.relationship("Team", backref='team')
 

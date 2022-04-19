@@ -24,7 +24,11 @@
             {% endfor %}
             <p class="mt-2 proj_para fw-bold">Projects: </p>
             {% for proj in x.user.projects %}
-                <span class="mx-3">{{ proj.name }}</span>
+                {% if proj.name == x.activeProj %}
+                    <span class="mx-3 activeProj" style="color:green;">{{ proj.name }}</span>
+                {% else %}
+                    <span class="mx-3">{{ proj.name }}</span>
+                {% endif %}
             {% endfor %}
             <hr>
             <br>

@@ -318,14 +318,38 @@ def viewTeam(emp_id):
     for t in tlis:
         if not t.name in tnames:
             tnames.append(t.name)
+    print(tnames)
     lis = []
     for tn in tnames:
         lis.extend(Team.query.filter_by(name=tn).all())
+    print(lis)
+    lis_copy = lis[:]
+    for t in lis_copy:
+        if t.emp_id == emp_id:
+            lis.remove(t)
+            print(lis)
+    print(lis)
     if len(lis) == 0:
         flash("You don't have any Team Members", category='info')
         return redirect(url_for('index'))
     else:
+        print(lis)
         return render_template('viewTeam.html', tdet=lis, emp_id=emp_id)
+
+
+@app.route('/project/status', methods=['POST', 'GET'])
+def activeProject():
+    emp = current_user.details
+    projects = current_user.projects
+    if request.method == 'POST':
+        actProj = request.form['activeProj']
+        print(actProj)
+        emp.activeProj = actProj
+        db.session.commit()
+        flash("Successfully set Active Project for Employee ID {} as {}".format(emp.emp_id, actProj), category='success')
+        return redirect(url_for('index'))
+    else:
+        return render_template('activeProject.html', projects=projects)
 
 
 @app.route('/logout')

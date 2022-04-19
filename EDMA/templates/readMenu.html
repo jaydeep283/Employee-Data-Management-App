@@ -27,11 +27,11 @@
                 <label for="searchSkill" class="form-label">Search by Skill: </label>
                 <input type="text" class="form-control" id="searchSkill" name="searchSkill"><br>
                 <select class="form-select" id="seSkillLevel" name="seSkillLevel">
-                <option selected>Select Skill Level</option>
-                <option value="1">Beginner</option>
-                <option value="2">Intermediate</option>
-                <option value="3">Expert</option>
-            </select>
+                    <option selected>Select Skill Level</option>
+                    <option value="1">Beginner</option>
+                    <option value="2">Intermediate</option>
+                    <option value="3">Expert</option>
+                </select>
                 <div class="form-check form-switch">
                   <input class="form-check-input" type="checkbox" id="skillCheck" name="skillCheck" value="1" checked>
                   <label class="form-check-label" for="skillCheck">Search with Skill & it's level.</label>
@@ -42,7 +42,7 @@
         {% if current_user.details.user_type == "Admin" %}
             <a href="{{ url_for('show_all') }}" class="btn btn-outline-dark my-3">Show All</a>
         {% endif %}
-    </div>
+    </div><br><br><hr class="hrinreadmenu">
 
     {% if not None in emp_det %}
         {% for emp in emp_det %}
@@ -59,7 +59,11 @@
                     {% endfor %}
                     <p class="mt-2 proj_para fw-bold">Projects: </p>
                     {% for proj in emp.user.projects %}
-                        <span class="mx-3">{{ proj.name }}</span>
+                        {% if proj.name == emp.activeProj %}
+                            <span class="mx-3 activeProj" style="color:green;">{{ proj.name }}</span>
+                        {% else %}
+                            <span class="mx-3">{{ proj.name }}</span>
+                        {% endif %}
                     {% endfor %}
                     <hr>
                     <br>
